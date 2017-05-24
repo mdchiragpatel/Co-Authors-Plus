@@ -865,7 +865,7 @@ class CoAuthors_Plus {
 	 * @param delete_id
 	 */
 	function delete_user_action( $delete_id ) {
-		global $wpdb;
+		global $wpdb, $coauthors_plus;
 
 		$reassign_id = isset( $_POST['reassign_user'] ) ? absint( $_POST['reassign_user'] ) : false;
 
@@ -889,6 +889,17 @@ class CoAuthors_Plus {
 		if ( is_object( $delete_user ) ) {
 			// Delete term
 			wp_delete_term( $delete_user->user_login, $this->coauthor_taxonomy );
+		}
+
+		// Get the deleted user data by user id.
+		$user_data = get_user_by( 'id', $delete_id );
+
+		// Get the associated user.
+		$associated_user = $this->guest_authors->get_guest_author_by( 'linked_account', $user_data->data->user_login );
+
+		if ( isset( $associated_user->ID ) ) {
+			// Delete associated guest user.
+			$this->guest_authors->delete( $associated_user->ID );
 		}
 	}
 
