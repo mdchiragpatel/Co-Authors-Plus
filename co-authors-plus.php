@@ -865,7 +865,7 @@ class CoAuthors_Plus {
 	 * @param delete_id
 	 */
 	function delete_user_action( $delete_id ) {
-		global $wpdb;
+		global $wpdb, $coauthors_plus;
 
 		$reassign_id = isset( $_POST['reassign_user'] ) ? absint( $_POST['reassign_user'] ) : false;
 
